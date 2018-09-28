@@ -3,8 +3,8 @@
 namespace Pilipinews\Website\Gma;
 
 use Pilipinews\Common\Client;
+use Pilipinews\Common\Crawler as DomCrawler;
 use Pilipinews\Common\Interfaces\CrawlerInterface;
-use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 /**
  * GMA News Crawler
@@ -50,10 +50,12 @@ class Crawler implements CrawlerInterface
     {
         $base = 'http://www.gmanetwork.com/news/';
 
-        $callback = function ($item) use ($base) {
+        $allowed = (array) $this->allowed;
+
+        $callback = function ($item) use ($base, $allowed) {
             $link = null;
 
-            foreach ((array) $this->allowed as $keyword) {
+            foreach ((array) $allowed as $keyword) {
                 $result = strpos($item['link'], (string) $keyword);
 
                 $result !== false && $link = $base . $item['link'];

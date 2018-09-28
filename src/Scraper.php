@@ -4,9 +4,10 @@ namespace Pilipinews\Website\Gma;
 
 use Pilipinews\Common\Article;
 use Pilipinews\Common\Client;
+use Pilipinews\Common\Converter;
+use Pilipinews\Common\Crawler as DomCrawler;
 use Pilipinews\Common\Interfaces\ScraperInterface;
 use Pilipinews\Common\Scraper as AbstractScraper;
-use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * GMA News Scraper
@@ -17,19 +18,37 @@ use Symfony\Component\DomCrawler\Crawler;
 class Scraper extends AbstractScraper implements ScraperInterface
 {
     /**
-     * Initializes the scraper instance.
+     * Returns the contents of an article.
      *
-     * @param string $link
+     * @param  string $link
+     * @return \Pilipinews\Common\Article
      */
-    public function __construct($link)
+    public function scrape($link)
+    {
+        $this->prepare((string) mb_strtolower($link));
+
+        $title = $this->json['story']['title'];
+
+        $converter = new Converter;
+
+        $title = $converter->convert($title);
+
+        $body = $this->tweet($this->crawler);
+
+        return new Article($title, $this->html($body));
+    }
+
+    /**
+     * Initializes the crawler instance.
+     *
+     * @param  string $link
+     * @return void
+     */
+    protected function prepare($link)
     {
         $response = (string) Client::request((string) $link);
 
         $html = trim(preg_replace('/\s+/', ' ', $response));
-
-        $html = str_replace('&nbsp;', ' ', $html);
-
-        $html = str_replace('&mdash;', '-', $html);
 
         $html = str_replace('<p> <strong>', '<p><strong>', $html);
 
@@ -39,20 +58,8 @@ class Scraper extends AbstractScraper implements ScraperInterface
 
         $this->json = json_decode('{' . $match[1] . '}', true);
 
-        $this->crawler = new Crawler($this->json['story']['main']);
-    }
+        $content = (string) $this->json['story']['main'];
 
-    /**
-     * Returns the contents of an article.
-     *
-     * @return \Pilipinews\Common\Article
-     */
-    public function scrape()
-    {
-        $title = (string) $this->json['story']['title'];
-
-        $body = $this->tweet($this->crawler);
-
-        return new Article($title, $this->html($body));
+        $this->crawler = new DomCrawler((string) $content);
     }
 }
