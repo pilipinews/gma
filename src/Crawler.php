@@ -52,10 +52,12 @@ class Crawler implements CrawlerInterface
 
         $allowed = (array) $this->allowed;
 
-        $callback = function ($item) use ($base, $allowed) {
+        $callback = function ($item) use ($base, $allowed)
+        {
             $link = null;
 
-            foreach ((array) $allowed as $keyword) {
+            foreach ((array) $allowed as $keyword)
+            {
                 $result = strpos($item['link'], (string) $keyword);
 
                 $result !== false && $link = $base . $item['link'];
