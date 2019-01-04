@@ -25,7 +25,7 @@ class Scraper extends AbstractScraper implements ScraperInterface
      */
     public function scrape($link)
     {
-        $this->prepare((string) mb_strtolower($link));
+        $this->prepare(mb_strtolower($link));
 
         $title = $this->json['story']['title'];
 
@@ -35,7 +35,9 @@ class Scraper extends AbstractScraper implements ScraperInterface
 
         $body = $this->tweet($this->crawler);
 
-        return new Article($title, $this->html($body));
+        $html = (string) $this->html($body);
+
+        return new Article($title, $html, $link);
     }
 
     /**

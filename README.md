@@ -7,8 +7,6 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Crawler and scraper for [GMA News](http://www.gmanetwork.com/news/) website.
-
 ## Installation
 
 Install `GMA News` via [Composer](https://getcomposer.org/):
@@ -16,10 +14,6 @@ Install `GMA News` via [Composer](https://getcomposer.org/):
 ``` bash
 $ composer require pilipinews/gma
 ```
-
-## Basic Usage
-
-Coming soon.
 
 ## Changelog
 
