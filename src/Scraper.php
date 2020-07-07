@@ -27,7 +27,9 @@ class Scraper extends AbstractScraper implements ScraperInterface
     {
         $this->prepare(mb_strtolower($link));
 
-        $title = $this->json['story']['title'];
+        $title = $this->json['headline'];
+
+        $title = str_replace(' | News |', '', $title);
 
         $converter = new Converter;
 
@@ -56,11 +58,11 @@ class Scraper extends AbstractScraper implements ScraperInterface
 
         $html = str_replace('<br /> ', '<br />', $html);
 
-        preg_match('/var initialData = {(.*?)};/i', $html, $match);
+        preg_match('/<script type="application\/ld\+json"\>(.*?)<\/script\>/i', $html, $match);
 
-        $this->json = json_decode('{' . $match[1] . '}', true);
+        $this->json = json_decode($match[1], true);
 
-        $content = (string) $this->json['story']['main'];
+        $content = (string) $this->json['articleBody'];
 
         $this->crawler = new DomCrawler((string) $content);
     }

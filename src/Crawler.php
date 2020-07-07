@@ -22,7 +22,7 @@ class Crawler implements CrawlerInterface
     /**
      * @var string
      */
-    protected $link = 'http://data.gmanetwork.com/gno/pages/home_1a_json.gz';
+    protected $link = 'https://data.gmanetwork.com/gno/pages/home_1a_json.gz';
 
     /**
      * Returns an array of articles to scrape.
@@ -48,7 +48,7 @@ class Crawler implements CrawlerInterface
      */
     protected function verify($items)
     {
-        $base = 'http://www.gmanetwork.com/news/';
+        $base = 'https://www.gmanetwork.com/news/';
 
         $allowed = (array) $this->allowed;
 
